@@ -73,11 +73,22 @@ const circles = svg
   .attr("r", 4)
 
 
-/* tooltip https://gramener.github.io/d3js-playbook/tooltips.html */
+/**
+ *  tooltip https://gramener.github.io/d3js-playbook/tooltips.html
+ *            position: absolute;
+ *           pointer-events: none;
+ *           background: #000;
+ *           color: #fff;
+ *  */
 const tip = d3.select("#my_dataviz")
   .append("div")
   .attr("class", "tooltip")
   .style("opacity", 0)
+  .style("position", 'absolute')
+  .style("pointer-events:", 'none')
+  .style("background", '#000')
+  .style("color", '#fff')
+
 
 circles
   .on('mouseover',function (event,datum){
