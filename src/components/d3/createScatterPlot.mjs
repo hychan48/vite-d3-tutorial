@@ -148,12 +148,13 @@ function createLines(){
 
   console.log('line',line,line.size());
 }
+// import {transition} from "https://d3js.org/d3-transition"
 // createLines()
 function appendConnectingLine(d1=0,d2=1){
   const lineColor = 'black'
   const xy1 = data[d1]
   const xy2 = data[d2]
-  svg
+  const path = svg
     .append("line")
     .attr("x1", x(xy1.x))
     .attr("y1", y(xy1.y))
@@ -161,6 +162,28 @@ function appendConnectingLine(d1=0,d2=1){
     .attr("y2", y(xy2.y))
     .attr("stroke",lineColor)
     .attr("stroke-width",1)
+
+  // https://medium.com/@louisemoxy/create-a-d3-line-chart-animation-336f1cb7dd61
+
+
+  const transitionPath = d3
+    .transition()
+    .ease(d3.easeSin)
+    .duration(25000)
+    .delay(25000);
+  const pathLength = path.node().getTotalLength();
+  console.log({pathLength});
+  path
+    // .attr("stroke-dashoffset", pathLength)//this will make it not work at all...
+    // .attr("stroke-dasharray", pathLength)
+    // .attr("stroke-dashoffset", 0)
+    .attr("stroke-dasharray", 3)//this just makes it a dash
+
+    .transition(transitionPath)
+    .style("transition",'0.5s')
+    .attr("transition",'0.5s')
+
 }
-appendConnectingLine()
-appendConnectingLine(1,2)
+// await new Promise(resolve => setTimeout(resolve, 1000));
+// appendConnectingLine()
+appendConnectingLine(0,15)
