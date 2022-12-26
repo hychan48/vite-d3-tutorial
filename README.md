@@ -1,4 +1,6 @@
 # Vue 3 + Vite
+https://hychan48.github.io/vite-d3-tutorial/
+https://github.com/hychan48/vite-d3-tutorial
 
 # deploy go githug pages
 https://vitejs.dev/guide/static-deploy.html#github-pages
