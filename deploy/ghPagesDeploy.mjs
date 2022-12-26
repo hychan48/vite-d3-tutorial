@@ -16,8 +16,10 @@ import fs from 'node:fs';
   console.log(stdout);
   if(stderr || code !== 0){
     console.error(stderr);
-    process.exit()
+
   }
+  if(code !==0){process.exit()}
+
 }
 /* add nojekyl */
 fs.writeFileSync(dir+"/.nojekyll","");
@@ -27,7 +29,7 @@ const options = {
 }
 await ghpages.publish(dir, options, function(err) {
   if(err){
-    console.error(err);
+    console.error('publish error',err);
   }else{
     console.log('Pushed')
   }
