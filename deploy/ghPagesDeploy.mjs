@@ -6,6 +6,7 @@
  *
  * make sure this file is run as root
  */
+const dir = 'dist';//or from env variable? perhaps or from args
 import * as ghpages from 'gh-pages'
 import {execCmdOnController} from "./SpawnExecOnController.mjs";
 import fs from 'node:fs';
@@ -15,11 +16,12 @@ import fs from 'node:fs';
   console.log(stdout);
   if(stderr || code !== 0){
     console.error(stderr);
+    process.exit()
   }
 }
-//add nojekyl
-fs.writeFileSync("dist/.nojekyll","");
-const dir = 'dist'
+/* add nojekyl */
+fs.writeFileSync(dir+"/.nojekyll","");
+
 const options = {
   dotfiles:true,
 }
