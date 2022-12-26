@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + Vue</title>
+  </head>
+  <body>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    const sampleData = [
+      { x: 0, y: 0,i:0},
+      { x: 0.01, y: 0.01,i:1 },
+      { x: 0.02, y: 0.02,i:2 },
+      { x: 0.03, y: 0.03,i:3 },
+      { x: 0, y: 0.5,i:4 },
+      { x: 0.01, y: 0.51,i:5 },
+      { x: 0.02, y: 0.52,i:6 },
+      { x: 0.03, y: 0.53 ,i:7},
+      { x: 0.5, y: 0 ,i:8},
+      { x: 0.51, y: 0.01,i:9 },
+      { x: 0.52, y: 0.02 ,i:10},
+      { x: 0.53, y: 0.03 ,i:11},
+      { x: 0.5, y: 0.5 ,i:12},
+      { x: 0.51, y: 0.51 ,i:13},
+      { x: 0.52, y: 0.52 ,i:14},
+      { x: 0.53, y: 0.53 ,i:15}
+    ];
+    const data = sampleData;
+    const width = 600,height=300;
+    const margin = ({top: 20, right: 30, bottom: 30, left: 40})
+    const x = d3.scaleLinear()
+      .domain(d3.extent(data, d => d.x)).nice()
+      .rangeRound([margin.left, width - margin.right]);
+    const y = d3.scaleLinear()
+      .domain(d3.extent(data, d => d.y)).nice()
+      .rangeRound([height - margin.bottom, margin.top]);
+
+
+    const svg = d3.select("body").append("svg")
+      .attr("viewBox", [0, 0, width, height]);
+    const xAxis = g => g.append("g")
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .call(d3.axisBottom(x).tickSizeOuter(0))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.select(".tick:last-of-type text").clone()
+        .attr("y", -3)
+        .attr("dy", null)
+        .attr("font-weight", "bold")
+        .text(data.x));
+
+    const yAxis = g => g.append("g")
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(y).tickSizeOuter(0))
+      .call(g => g.select(".domain").remove())
+      .call(g => g.select(".tick:last-of-type text").clone()
+        .attr("x", 3)
+        .attr("text-anchor", "start")
+        .attr("font-weight", "bold")
+        .text(data.y))
+
+    svg.append("g")
+      .call(xAxis);
+
+    svg.append("g")
+      .call(yAxis);
+
+    const circles = svg
+      // .selectAll("dot")
+      .append("g")
+      // .append("g")
+      // .attr("id", "circleG")
+      .attr("stroke", "white")
+      // .attr("pointer-events","none")//doesnt do anything either...
+      // .on('mouseover',function(d){
+      //   console.log('mouse over 1');
+      // })
+      .selectAll("circle")
+      .data(data)
+      // .on("click", function(){
+      //   console.log('clicked');
+      // })
+
+      .join("circle")
+      // .enter().append("circle")//instead of join?
+      .attr("id", d => `d3i_${d.i}`)//added to make them selectable
+      .attr("cx", d => x(d.x))
+      .attr("cy", d => y(d.y))
+      .attr("r", 4)
+      .on('mouseover',function (event,datum){
+        console.log('mouse over',event,datum);
+      })
+      //this doesnt work
+      // .on('mouseover',function(d){
+      //   console.log('mouse over');
+      // })
+      // .on("click", function(){
+      //   console.log('clicked');
+      // })
+
+
+  </script>
+
+
+<!--  <div id="app"></div>-->
+<!--    <script type="module" src="/src/main.js"></script>-->
+  </body>
+</html>
