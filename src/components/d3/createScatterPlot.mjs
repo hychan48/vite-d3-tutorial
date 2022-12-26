@@ -104,3 +104,63 @@ circles
   .on("mouseout", function(d) {
     tip.style("opacity", 0)
   })
+
+function createLines(){
+  const projection = d3.geoProjection
+  const line = svg.selectAll("line")
+    .data(data)
+    // .enter()
+    .append("line")
+    .join('line')
+    // .attr("x1", d=>projection(d[0])[0])
+    .attr("x1", (d,i,datas) => {
+      console.log('x1',d.x,x(d.x));
+      // debugger
+      return x(d.x)
+      // return projection(d[0])[0]
+    })
+    .attr("x2", (d,i,datas) => {
+      // debugger
+      return x(data[(i + 1) % data.length].x)
+    })
+    .attr("y1", (d,i,datas) => {
+      return y(d.y)
+    })
+    .attr("y2", (d,i,datas) => {
+
+      return y(data[(i + 1) % data.length].y)
+    })
+    // .attr("y1", d=>projection(d[0])[1])
+    // .attr("x2", d=>projection(d[1])[0])
+    // .attr("y2", d=>projection(d[1])[1])
+    // .attr("y1", d=>projection(d[0])[1])
+    // .attr("x2", d=>projection(d[1])[0])
+    // .attr("y2", d=>projection(d[1])[1])
+    .attr("stroke-width", 1)
+    .attr("stroke", "yellow")
+
+    // .attr("x1", 0)
+    // .attr("y1", 0)
+    // .attr("x2", 200)
+    // .attr("y2", 200);
+
+
+
+  console.log('line',line,line.size());
+}
+// createLines()
+function appendConnectingLine(d1=0,d2=1){
+  const lineColor = 'black'
+  const xy1 = data[d1]
+  const xy2 = data[d2]
+  svg
+    .append("line")
+    .attr("x1", x(xy1.x))
+    .attr("y1", y(xy1.y))
+    .attr("x2", x(xy2.x))
+    .attr("y2", y(xy2.y))
+    .attr("stroke",lineColor)
+    .attr("stroke-width",1)
+}
+appendConnectingLine()
+appendConnectingLine(1,2)
