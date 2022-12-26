@@ -7,6 +7,7 @@
     <title>Vite + Vue</title>
   </head>
   <body>
+  <div id="my_dataviz"></div>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script>
     const sampleData = [
@@ -38,7 +39,9 @@
       .rangeRound([height - margin.bottom, margin.top]);
 
 
-    const svg = d3.select("body").append("svg")
+    const svg = d3
+      .select("#my_dataviz")
+      .append("svg")
       .attr("viewBox", [0, 0, width, height]);
     const xAxis = g => g.append("g")
       .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -67,40 +70,49 @@
       .call(yAxis);
 
     const circles = svg
-      // .selectAll("dot")
       .append("g")
-      // .append("g")
-      // .attr("id", "circleG")
       .attr("stroke", "white")
-      // .attr("pointer-events","none")//doesnt do anything either...
-      // .on('mouseover',function(d){
-      //   console.log('mouse over 1');
-      // })
       .selectAll("circle")
       .data(data)
-      // .on("click", function(){
-      //   console.log('clicked');
-      // })
-
       .join("circle")
-      // .enter().append("circle")//instead of join?
       .attr("id", d => `d3i_${d.i}`)//added to make them selectable
       .attr("cx", d => x(d.x))
       .attr("cy", d => y(d.y))
       .attr("r", 4)
-      .on('mouseover',function (event,datum){
-        console.log('mouse over',event,datum);
-      })
-      //this doesnt work
-      // .on('mouseover',function(d){
-      //   console.log('mouse over');
-      // })
-      // .on("click", function(){
-      //   console.log('clicked');
-      // })
+
+
+    /* tooltip https://gramener.github.io/d3js-playbook/tooltips.html */
+    var tip = d3.select("#my_dataviz")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0)
+
+      circles
+        .on('mouseover',function (event,datum){
+          // console.log('mouse over',event,datum);
+          tip.style("opacity", 1)
+            // .html('hi')
+            .html('x: ' + datum.x + "<br/> y: " + datum.y + "<br/> i: " + datum.i)
+            .style("left", (event.pageX-25) + "px")
+            .style("top", (event.pageY-75) + "px")
+
+
+        })
+        .on("mouseout", function(d) {
+          tip.style("opacity", 0)
+        })
 
 
   </script>
+  <style>
+      .tooltip {
+          position: absolute;
+          pointer-events: none;
+          background: #000;
+          color: #fff;
+      }
+  </style>
+
 
 
 <!--  <div id="app"></div>-->
