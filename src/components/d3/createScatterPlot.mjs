@@ -200,6 +200,18 @@ const pathG = appendConnectingLine(0,15)
 const zoom = d3.zoom()
   .scaleExtent([1, 8])
   .on('zoom', function(event) {
+
+    // svg.transition().duration(0).call(
+    //   event.transform,
+    //   d3.zoomIdentity,
+    //   d3.zoomTransform(svg.node()).invert([width / 4, height / 4])
+    // );
+    // return
+    // d3.selectAll("#gCircles")
+    //   .attr('transform', event.transform);
+    // pathG
+    //   .attr('transform', event.transform);
+    // return
     d3.select('#gCircles')
       // .selectAll('path')
       .attr('transform', event.transform);
