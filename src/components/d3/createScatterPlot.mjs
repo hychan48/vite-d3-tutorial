@@ -35,6 +35,8 @@ const svg = d3
   .select("#my_dataviz")
   .append("svg")
   .attr("viewBox", [0, 0, width, height]);
+
+
 const xAxis = g => g.append("g")
   .attr("transform", `translate(0,${height - margin.bottom})`)
   .call(d3.axisBottom(x).tickSizeOuter(0))
@@ -55,18 +57,19 @@ const yAxis = g => g.append("g")
     .attr("font-weight", "bold")
     .text(data.y))
 
-svg.append("g")
+const xG = svg.append("g")
   .call(xAxis);
 
-svg.append("g")
+const yG = svg.append("g")
   .call(yAxis);
 
 const circles = svg
   .append("g")
-  .attr("stroke", "white")
+  .attr("id","gCircles")
   .selectAll("circle")
   .data(data)
   .join("circle")
+  .attr("stroke", "white")
   .attr("id", d => `d3i_${d.i}`)//added to make them selectable
   .attr("cx", d => x(d.x))
   .attr("cy", d => y(d.y))
@@ -166,24 +169,57 @@ function appendConnectingLine(d1=0,d2=1){
   // https://medium.com/@louisemoxy/create-a-d3-line-chart-animation-336f1cb7dd61
 
 
-  const transitionPath = d3
-    .transition()
-    .ease(d3.easeSin)
-    .duration(25000)
-    .delay(25000);
-  const pathLength = path.node().getTotalLength();
-  console.log({pathLength});
-  path
-    // .attr("stroke-dashoffset", pathLength)//this will make it not work at all...
-    // .attr("stroke-dasharray", pathLength)
-    // .attr("stroke-dashoffset", 0)
-    .attr("stroke-dasharray", 3)//this just makes it a dash
+  //transition works on zooming interesting
+  // const transitionPath = d3
+  //   .transition()
+  //   .ease(d3.easeSin)
+  //   .duration(25000)
+  //   .delay(25000);
+  // const pathLength = path.node().getTotalLength();
+  // console.log({pathLength});
+  // path
+  //   // .attr("stroke-dashoffset", pathLength)//this will make it not work at all...
+  //   // .attr("stroke-dasharray", pathLength)
+  //   // .attr("stroke-dashoffset", 0)
+  //   .attr("stroke-dasharray", 3)//this just makes it a dash
+  //
+  //   .transition(transitionPath)
+  //   .style("transition",'0.5s')
+  //   .attr("transition",'0.5s')
 
-    .transition(transitionPath)
-    .style("transition",'0.5s')
-    .attr("transition",'0.5s')
-
+  return path;
 }
 // await new Promise(resolve => setTimeout(resolve, 1000));
 // appendConnectingLine()
-appendConnectingLine(0,15)
+const pathG = appendConnectingLine(0,15)
+
+/**
+ * try zoom
+ * https://gist.github.com/d3noob/7b7e98331f440139dff50f4a58044677
+ * */
+const zoom = d3.zoom()
+  .scaleExtent([1, 8])
+  .on('zoom', function(event) {
+    d3.select('#gCircles')
+      // .selectAll('path')
+      .attr('transform', event.transform);
+    xG
+      .attr('transform', event.transform);
+    yG
+      .attr('transform', event.transform);
+    pathG
+      .attr('transform', event.transform);
+  });
+d3.select("#my_dataviz").on('click',function(event,datum){
+  const {ctrlKey} = event;
+  if(ctrlKey){
+    svg.transition().duration(0).call(
+      zoom.transform,
+      d3.zoomIdentity,
+      d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+    );
+  }
+  // console.log("clicked",event,datum);
+})
+svg.call(zoom);
+
