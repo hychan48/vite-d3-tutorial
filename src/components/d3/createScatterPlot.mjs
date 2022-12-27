@@ -210,6 +210,10 @@ const zoom = d3.zoom()
     pathG
       .attr('transform', event.transform);
   });
+/**
+ * zoom reset
+ * https://observablehq.com/@d3/programmatic-zoom
+ */
 d3.select("#my_dataviz").on('click',function(event,datum){
   const {ctrlKey} = event;
   if(ctrlKey){
